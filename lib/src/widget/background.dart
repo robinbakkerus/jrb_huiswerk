@@ -45,7 +45,7 @@ class Background {
   static Widget _scheduledTasks(List<Task> tasks) {
     List<DateTime> caldays = AppUtils.calDays();
     return Container(
-      height: 240,
+      height: _dayHeight(),
       width: 600,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -72,68 +72,71 @@ class Background {
 
   static Widget _schedTasksPerDay(List<Task> tasks, DateTime date) {
     return Container(
-        decoration:
-            new BoxDecoration(border: new Border.all(color: Colors.blueGrey)),
-        padding: EdgeInsets.all(1.0),
-        margin: EdgeInsets.all(1.0),
-        // width: _dayWidth(),
-        height: _dayHeight(),
-        // color: Colors.yellow,
-        child: Column(
-          crossAxisAlignment:CrossAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            _dayHeader(AppUtils.dayHdr(date)),
-            _divLine(),
-            _theScheduledTasks(tasks),
-            _divLine(),
-            _taskSlot(),
-          ],
-        ),
-      );
-  }
-
-  static Widget _theScheduledTasks(List<Task> tasks) {
-    List<Task> _schedTasks =
-        AppUtils.scheduledTasks(tasks, AppUtils.yearDayFromNow());
-    return Container(
-      width: Constants.taskWidth,
-      height: Constants.taskHeight * (1+_schedTasks.length),
-      child: ListView.builder(
-          itemCount: _schedTasks.length,
-          itemBuilder: (context, index) {
-            return TaskWidget.buildTaskWidget(_schedTasks[index]);
-          }),
+      decoration:
+          new BoxDecoration(border: new Border.all(color: Colors.blueGrey)),
+      padding: EdgeInsets.all(1.0),
+      margin: EdgeInsets.all(1.0),
+      // width: _dayWidth(),
+      height: _dayHeight(),
+      // color: Colors.yellow,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: _theScheduledTasks(tasks, date),
+      ),
     );
   }
 
-  static Widget _taskSlot() {
+  static List<Widget> _theScheduledTasks(List<Task> tasks, DateTime date) {
+    List<Task> _schedTasks =
+        AppUtils.scheduledTasks(tasks, AppUtils.yearDayFromDate(date));
+    print("$date");
+    _schedTasks.forEach((f) => print(f.type));
+    print("-");
+    AppUtils.sortTasks(_schedTasks);
+    _schedTasks.forEach((f) => print(f.type));
+
+    List<Widget> r = List();
+    r.add(_taskSlot(date));
+    r.add(_divLine());
+
+    for (int i = 0; i < _schedTasks.length; i++) {
+      r.add(Container(
+        width: Constants.taskWidth,
+        height: Constants.taskHeight + 7.0,
+        child: TaskWidget.buildScheduledTaskWidget(_schedTasks[i]),
+      ));
+    }
+
+    r.add(_divLine());
+    return r;
+  }
+
+  static Widget _taskSlot(DateTime date) {
+    String hdr = AppUtils.dayHdr(date);
     bool accepted = false;
     return DragTarget(
-          builder: (context, List<DragData> candidateData, rejectedData) {
-            print("** :"  + candidateData.toString());
-            return Container(
-              height:Constants.taskHeight,
-              width: Constants.taskWidth,
-              decoration:
-                  BoxDecoration(border: new Border.all(color: Colors.brown, width: 2)),
-            );
-          },
-          onWillAccept: (data) {
-            print("... will accept " + data.toString());
-            // return accepted;
-            return true;
-          },
-          onAccept: (data) {
-            print("todo accept ..." + data.toString());
-            DragData _dragData = data as DragData;
-            AppEvents.fireScheduleTasks(_dragData.taskId);
-            accepted = true;
-          },
-          onLeave: (data) {
-            print('onleave');
-          },
+      builder: (context, List<DragData> candidateData, rejectedData) {
+        return Container(
+          height: Constants.taskHeight,
+          width: Constants.taskWidth,
+          decoration: BoxDecoration(
+              color: Colors.yellow,
+              border: new Border.all(color: Colors.brown, width: 2)),
+          child: Text(hdr),
         );
+      },
+      onWillAccept: (data) {
+        return true;
+      },
+      onAccept: (data) {
+        DragData _dragData = data as DragData;
+        AppEvents.fireScheduleTasks(_dragData.taskId, date);
+        accepted = true;
+      },
+      onLeave: (data) {
+        print('onleave');
+      },
+    );
   }
 
   static Widget _divLine() => Divider(

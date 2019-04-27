@@ -9,7 +9,8 @@ class GetTasksEvent {}
 
 class ScheduleTaskEvent {
   int taskId;
-  ScheduleTaskEvent(this.taskId);
+  DateTime dueDate;
+  ScheduleTaskEvent(this.taskId, this.dueDate);
 }
 
 class AppEvents {
@@ -23,7 +24,7 @@ class AppEvents {
   */
   static void fireTasksReady() => _sEventBus.fire(new TasksReadyEvent());
   static void fireGetTasks() => _sEventBus.fire(new GetTasksEvent());
-  static void fireScheduleTasks(int taskId) => _sEventBus.fire(new ScheduleTaskEvent(taskId));
+  static void fireScheduleTasks(int taskId, DateTime dueDate) => _sEventBus.fire(new ScheduleTaskEvent(taskId, dueDate));
 
   static void onTaskReady(OnTaskReadyFunc func) =>
       _sEventBus.on<TasksReadyEvent>().listen((event) => func(event));

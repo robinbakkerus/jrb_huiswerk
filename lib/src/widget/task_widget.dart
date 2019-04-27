@@ -52,21 +52,27 @@ class TaskWidget {
     );
   }
 
-  static Widget buildTaskWidget(Task task) {
+  static Widget buildScheduledTaskWidget(Task task) {
     return Container(
       width: Constants.taskWidth,
       height: Constants.taskHeight,
-      decoration: new BoxDecoration(
-        border: Border.all(color: Colors.red),
-        image: DecorationImage(
-          image: new AssetImage('images/' + Constants.taskImageMap[task.type]),
-          fit: BoxFit.fill,
-        ),
-      ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-              height: 3,
+            width: Constants.taskWidth,
+            height: Constants.taskHeight,
+            decoration: new BoxDecoration(
+              // border: Border.all(color: Colors.black, width: 2),
+              image: DecorationImage(
+                image: new AssetImage(
+                    'images/' + Constants.taskImageMap[task.type]),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          Container(
+              height: 5,
               decoration: new BoxDecoration(
                 border: Border.all(color: Colors.green),
               ))

@@ -2,8 +2,8 @@ import '../model/settings.dart';
 
 class Constants {
   static Settings current = new Settings("");
-  static double taskWidth = 50.0;
-  static double taskHeight = 50.0;
+  static double taskWidth = 55.0;
+  static double taskHeight = 55.0;
 
   static var taskImageMap = {
     TaskType.geschiedenis : 'geschiedenis.png',

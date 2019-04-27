@@ -6,9 +6,10 @@ import 'src/ctrl/app_ctrl.dart';
 // import 'src/data/app_data.dart';
 
 void main() {
-  SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft])
-      .then((_) => runApp(new App()));
+      // SystemChrome.setPreferredOrientations(
+      //     [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft])
+      // .then((_) => runApp(new App()));
+      runApp(new App());
 }
 
 class App extends StatelessWidget {

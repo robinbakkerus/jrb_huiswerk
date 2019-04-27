@@ -20,6 +20,12 @@ class AppUtils {
 
   static List<Task> newTasks(List<Task> tasks) => _findTasks(tasks, _isNewTask, 0);
   static List<Task> scheduledTasks(List<Task> tasks, int yearDay) => _findTasks(tasks, _isScheduledTask, yearDay);
+  
+  // sorteer eerst op duur en dan op type
+  static List<Task> sortTasks(List<Task> tasks) {
+    tasks.sort((a, b) => b.dueDate.compareTo(a.dueDate));
+  }
+
 
   static List<Task> _findTasks(List<Task> tasks, Function(Task, int) func, int yearDay) {
     List<Task> r = tasks.where((t) => func(t, yearDay)).toList();
@@ -29,9 +35,19 @@ class AppUtils {
   static bool _isNewTask(Task task, int yearDay) => task.status == TaskStatus.newtask;
 
   static bool _isScheduledTask(Task task, int yearDay) {
-    return task.status == TaskStatus.scheduled;// && yearDay < AppUtils.yearDayFromTask(task); 
+    return task.status == TaskStatus.scheduled && yearDay <= AppUtils.yearDayFromTask(task); 
   }
 
+  static Task getTask(List<Task> tasks, int taskId) {
+    return tasks.firstWhere((t) => t.id == taskId);
+  }
+
+  static void updateTask(List<Task> tasks, Task task) {
+    int idx = tasks.indexWhere((t) => t.id == task.id);
+    if (idx >= 0) {
+      tasks[idx] = task;
+    }
+  }
 
   static List<DateTime> calDays() {
     List<DateTime> r = List();

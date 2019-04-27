@@ -30,4 +30,6 @@ enum TaskStatus {
   newtask, scheduled, busy, done, 
 }
 
-
+enum DragType {
+  newTask, start, stop,
+}

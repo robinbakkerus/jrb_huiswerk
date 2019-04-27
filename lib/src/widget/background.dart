@@ -5,6 +5,8 @@ import '../model/task.dart';
 import 'task_widget.dart';
 import '../data/constants.dart';
 import '../util/app_utils.dart';
+import '../events/app_events.dart';
+import '../model/drag_data.dart';
 
 class Background {
   static Widget backWidgets(List<Task> tasks) {
@@ -82,9 +84,9 @@ class Background {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             _dayHeader(AppUtils.dayHdr(date)),
-            // _divLine(),
+            _divLine(),
             _theScheduledTasks(tasks),
-            // _divLine(),
+            _divLine(),
             _taskSlot(),
           ],
         ),
@@ -100,28 +102,36 @@ class Background {
       child: ListView.builder(
           itemCount: _schedTasks.length,
           itemBuilder: (context, index) {
-            return TaskWidget.buildTaskWidget(tasks[index]);
+            return TaskWidget.buildTaskWidget(_schedTasks[index]);
           }),
     );
   }
 
   static Widget _taskSlot() {
+    bool accepted = false;
     return DragTarget(
-          builder: (context, List<int> candidateData, rejectedData) {
-            print(candidateData);
+          builder: (context, List<DragData> candidateData, rejectedData) {
+            print("** :"  + candidateData.toString());
             return Container(
-              height:Constants.taskHeight ,
+              height:Constants.taskHeight,
               width: Constants.taskWidth,
               decoration:
-                  BoxDecoration(border: new Border.all(color: Colors.orange)),
+                  BoxDecoration(border: new Border.all(color: Colors.brown, width: 2)),
             );
           },
           onWillAccept: (data) {
-            print("todo");
+            print("... will accept " + data.toString());
+            // return accepted;
             return true;
           },
           onAccept: (data) {
-            print("todo accept");
+            print("todo accept ..." + data.toString());
+            DragData _dragData = data as DragData;
+            AppEvents.fireScheduleTasks(_dragData.taskId);
+            accepted = true;
+          },
+          onLeave: (data) {
+            print('onleave');
           },
         );
   }

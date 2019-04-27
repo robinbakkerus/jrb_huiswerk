@@ -44,7 +44,7 @@ class _HomePageState extends State<_HomePage> {
   _HomePageState() {
     _appData = AppData();
     AppEvents.onTaskReady(_onTaskReady);
-    AppEvents.firegetTasks();
+    AppEvents.fireGetTasks();
   }
 
   void _onTaskReady(TasksReadyEvent event) {
@@ -75,6 +75,9 @@ class _HomePageState extends State<_HomePage> {
   }
 
   void _refresh() {
-    AppEvents.firegetTasks();
+   setState(() {
+      _tasks = List();
+    });
+    AppEvents.fireGetTasks();
   }
 }

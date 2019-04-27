@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // import '../data/app_data.dart';
 import '../data/constants.dart';
 import '../model/task.dart';
+import '../model/drag_data.dart';
 
 class TaskWidget {
   static Container buildAllNewTaskWidgets(List<Task> newTasks) {
@@ -13,14 +14,15 @@ class TaskWidget {
           scrollDirection: Axis.horizontal,
           itemCount: newTasks.length,
           itemBuilder: (context, index) {
-            return _newDragableTaskWidget(newTasks[index].type);
+            return _newDragableTaskWidget(newTasks[index]);
           }),
     );
   }
 
-  static Widget _newDragableTaskWidget(TaskType taskType) {
+  static Widget _newDragableTaskWidget(Task task) {
+    TaskType taskType = task.type;
     return Draggable(
-      data: 1,
+      data: DragData(DragType.newTask, task.id),
       child: _newTaskWidget(taskType),
       feedback: _newTaskWidget(taskType),
       childWhenDragging: Text(taskType.toString()),

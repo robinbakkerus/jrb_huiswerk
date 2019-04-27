@@ -29,7 +29,7 @@ class AppUtils {
   static bool _isNewTask(Task task, int yearDay) => task.status == TaskStatus.newtask;
 
   static bool _isScheduledTask(Task task, int yearDay) {
-    return task.status == TaskStatus.scheduled && yearDay < AppUtils.yearDayFromTask(task); 
+    return task.status == TaskStatus.scheduled;// && yearDay < AppUtils.yearDayFromTask(task); 
   }
 
 

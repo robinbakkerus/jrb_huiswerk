@@ -22,7 +22,7 @@ class AppUtils {
   static List<Task> scheduledTasks(List<Task> tasks, int yearDay) => _findTasks(tasks, _isScheduledTask, yearDay);
   
   // sorteer eerst op duur en dan op type
-  static List<Task> sortTasks(List<Task> tasks) {
+  static void sortTasks(List<Task> tasks) {
     tasks.sort((a, b) => b.dueDate.compareTo(a.dueDate));
   }
 

@@ -17,7 +17,7 @@ class Background {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          _newTasks(tasks),
+          _topRow(tasks),
           Divider(
             height: 2,
           ),
@@ -27,18 +27,36 @@ class Background {
     );
   }
 
-  static Widget _newTasks(List<Task> tasks) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          decoration:
-              new BoxDecoration(border: new Border.all(color: Colors.blue)),
-          width: AppData().screenWidth * 0.9,
-          height: Constants.taskHeight,
-          child: Text("..."),
+  static Widget _topRow(List<Task> tasks) {
+    return Container(
+      decoration: new BoxDecoration(border: new Border.all(color: Colors.blue)),
+      width: AppData().screenWidth * 0.9,
+      height: Constants.taskHeight,
+      child: Row(
+        children: <Widget>[
+          _newTasks(tasks),
+          _divSpace(10),
+          _stopWatch(),
+        ],
+      ),
+    );
+  }
+
+  static Widget _newTasks(List<Task> tasks) =>
+      TaskWidget.buildAllNewTaskWidgets(AppUtils.newTasks(tasks));
+
+  static Widget _stopWatch() {
+  return Container(
+      width: Constants.taskWidth,
+      height: Constants.taskHeight,
+      decoration: new BoxDecoration(
+        border: Border.all(color: Colors.green),
+        image: DecorationImage(
+          image: new AssetImage('images/stopwatch.png'),
+          fit: BoxFit.fill,
         ),
-        TaskWidget.buildAllNewTaskWidgets(AppUtils.newTasks(tasks)),
-      ],
+      ),
+      
     );
   }
 
@@ -57,19 +75,6 @@ class Background {
     );
   }
 
-  static Widget _dayHeader(String day) {
-    return Container(
-      width: Constants.taskWidth,
-      height: 20,
-      decoration: new BoxDecoration(
-        // borderRadius: new BorderRadius.circular(3.0),
-        color: Colors.yellow,
-      ),
-      // padding: EdgeInsets.all(5.0),
-      child: Text(day),
-    );
-  }
-
   static Widget _schedTasksPerDay(List<Task> tasks, DateTime date) {
     return Container(
       decoration:
@@ -78,7 +83,6 @@ class Background {
       margin: EdgeInsets.all(1.0),
       // width: _dayWidth(),
       height: _dayHeight(),
-      // color: Colors.yellow,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: _theScheduledTasks(tasks, date),
@@ -89,20 +93,16 @@ class Background {
   static List<Widget> _theScheduledTasks(List<Task> tasks, DateTime date) {
     List<Task> _schedTasks =
         AppUtils.scheduledTasks(tasks, AppUtils.yearDayFromDate(date));
-    print("$date");
-    _schedTasks.forEach((f) => print(f.type));
-    print("-");
     AppUtils.sortTasks(_schedTasks);
-    _schedTasks.forEach((f) => print(f.type));
 
     List<Widget> r = List();
-    r.add(_taskSlot(date));
+    r.add(_taskDayHeader(date));
     r.add(_divLine());
 
     for (int i = 0; i < _schedTasks.length; i++) {
       r.add(Container(
         width: Constants.taskWidth,
-        height: Constants.taskHeight + 7.0,
+        height: Constants.taskHeight + 12,
         child: TaskWidget.buildScheduledTaskWidget(_schedTasks[i]),
       ));
     }
@@ -111,7 +111,7 @@ class Background {
     return r;
   }
 
-  static Widget _taskSlot(DateTime date) {
+  static Widget _taskDayHeader(DateTime date) {
     String hdr = AppUtils.dayHdr(date);
     bool accepted = false;
     return DragTarget(
@@ -143,6 +143,14 @@ class Background {
         height: 5,
         color: Colors.amber,
       );
+
+  static Widget _divSpace(double w) {
+    return Container(
+      width: w,
+      color: Colors.amber,
+      );
+  }
+
   // static double _dayWidth() => (AppData().screenWidth - 100) / 7.0;
   static double _dayHeight() => (AppData().screenHeight * 0.7);
 }

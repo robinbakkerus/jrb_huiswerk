@@ -9,7 +9,7 @@ class TaskWidget {
   static Container buildAllNewTaskWidgets(List<Task> newTasks) {
     return Container(
       height: Constants.taskHeight,
-      width: 250,
+      width: newTasks.length * Constants.taskWidth,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: newTasks.length,
@@ -71,10 +71,11 @@ class TaskWidget {
               ),
             ),
           ),
+          Divider(height: 2,),
           Container(
-              height: 5,
+              height: 8,
               decoration: new BoxDecoration(
-                border: Border.all(color: Colors.green),
+                border: Border.all(color: Colors.green, width: 2),
               ))
         ],
       ),

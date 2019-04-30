@@ -1,7 +1,12 @@
+import 'package:flutter/material.dart';
+
 import '../model/task.dart';
 import '../service/task_intf.dart';
 import '../events/app_events.dart';
 import '../data/constants.dart';
+import '../util/app_utils.dart';
+import '../model/app_status.dart';
+import '../service/timer_srv.dart';
 
 class AppData {
   static final AppData _instance = new AppData._internal();
@@ -9,10 +14,24 @@ class AppData {
 
   ITaskService _taskService = ITaskService();
   List<Task> _tasks;
-  List<Task> get tasks => this._tasks;
-  
-  double  screenWidth, screenHeight;
+  BuildContext _context;
+  AppStatus _appStatus = AppStatus();
+  TimerService _timerService = new TimerService();
 
+  List<Task> get tasks => this._tasks;
+  List<Task> get allScheduledTasks => AppUtils.allScheduledTasks(tasks);
+  TimerService get timerService => _timerService;
+  AppStatus get appStatus => _appStatus;
+
+  BuildContext get context => _context;
+  set context(BuildContext ctx) {
+    _context = ctx;
+  }
+
+  double  screenWidth, screenHeight;
+  bool get isBusy => _appStatus.currentStatus == TaskStatus.busy;
+  void setStatus(TaskStatus status) => _appStatus.currentStatus = status;
+  
   AppData._internal() {
     AppEvents.onGetTasks(_onGetTasks);
     // AppEvents.onScheduleTask(_onScheduleTask);

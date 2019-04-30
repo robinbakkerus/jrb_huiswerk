@@ -2,8 +2,11 @@ import '../model/settings.dart';
 
 class Constants {
   static Settings current = new Settings("");
-  static double taskWidth = 55.0;
-  static double taskHeight = 55.0;
+  static double taskWidth() => 55.0;
+  static double taskHeight() => 55.0;
+  static double schedTaskHeight()  => 55.0 + 15;
+  static bool devMode = true;
+  static Duration useDuration = devMode ? Duration(seconds: 1) : Duration(minutes: 1);
 
   static var taskImageMap = {
     TaskType.geschiedenis : 'geschiedenis.png',

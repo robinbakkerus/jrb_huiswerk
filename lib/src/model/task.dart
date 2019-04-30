@@ -7,7 +7,7 @@ class Task {
   TaskStatus status;
   DateTime dueDate;
   int expEffort; // verwachte tijd in minuten
-  int timeSpend; // tijde in mins die er aan besteerd is
+  int timeSpend; // tijd in mins die er aan besteerd is
   
   Task(this.id, this.userId, this.type, this.status, this.dueDate, this.expEffort, this.timeSpend);
 

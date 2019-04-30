@@ -10,7 +10,7 @@ import '../widget/background.dart';
 class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+      return new MaterialApp(
       title: 'Huiswerk APP',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
@@ -61,6 +61,8 @@ class _HomePageState extends State<_HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    AppData().context = context;
+
     return new Scaffold(
       // appBar: buildMainAppBar(context, -1),
       // body: Stack(children: <Widget>[

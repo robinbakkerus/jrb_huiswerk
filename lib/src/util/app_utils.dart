@@ -44,12 +44,12 @@ class AppUtils {
     return r;
   }
 
-  static bool _isNewTask(Task task, int yearDay) => task.status == TaskStatus.newtask;
+  static bool _isNewTask(Task task, int yearDay) => task.status == TaskStatusType.newtask;
 
-  static bool _isBusyTask(Task task, int yearDay) => task.status == TaskStatus.busy;
+  static bool _isBusyTask(Task task, int yearDay) => task.status == TaskStatusType.busy;
 
   static bool _isScheduledTask(Task task, int yearDay) {
-    return (task.status == TaskStatus.scheduled || task.status == TaskStatus.busy) 
+    return (task.status == TaskStatusType.scheduled || task.status == TaskStatusType.busy) 
       && yearDay <= AppUtils.yearDayFromTask(task); 
   }
 
@@ -107,7 +107,7 @@ class AppUtils {
 
   static String schedImageName(Task task, DateTime date) {
     String r = imageName(task);
-    if (task.status == TaskStatus.busy && isToday(date)) {
+    if (task.status == TaskStatusType.busy && isToday(date)) {
       r = 'huiswerk.jpg';
     }
     return r;

@@ -4,7 +4,7 @@ class Task {
   int id;
   int userId;
   TaskType type;
-  TaskStatus status;
+  TaskStatusType status;
   DateTime dueDate;
   int expEffort; // verwachte tijd in minuten
   int timeSpend; // tijd in mins die er aan besteerd is

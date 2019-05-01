@@ -66,6 +66,7 @@ class TaskWidget {
         return AppUtils.isToday(date) && !AppData().isBusy;
       },
       onAccept: (data) {
+        print('todo accepted');
         AppEvents.fireStartTask(task.id);
       },
     );

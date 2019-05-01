@@ -29,8 +29,9 @@ class AppData {
   }
 
   double  screenWidth, screenHeight;
-  bool get isBusy => _appStatus.currentStatus == TaskStatus.busy;
-  void setStatus(TaskStatus status) => _appStatus.currentStatus = status;
+  bool get isBusy => _appStatus.currentStatus == AppStatusType.busy;
+  bool get isWaiting => _appStatus.currentStatus == AppStatusType.waiting;
+  void setStatus(AppStatusType status) => _appStatus.currentStatus = status;
   
   AppData._internal() {
     AppEvents.onGetTasks(_onGetTasks);
@@ -56,7 +57,7 @@ class AppData {
     Task schedTask = _tasks.firstWhere((t) => t.id == taskId);
     if (schedTask != null) {
       schedTask.dueDate = dueDate;
-      schedTask.status = TaskStatus.scheduled;
+      schedTask.status = TaskStatusType.scheduled;
       AppEvents.fireTasksReady();
     }
   }

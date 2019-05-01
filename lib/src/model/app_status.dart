@@ -1,7 +1,7 @@
 import '../data/constants.dart';
 
 class AppStatus {
-  TaskStatus currentStatus;
+  AppStatusType currentStatus;
   int currentTaskId;
   num timerStartedAt;
   num timerStoppedAt;

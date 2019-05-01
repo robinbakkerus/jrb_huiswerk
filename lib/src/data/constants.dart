@@ -41,8 +41,12 @@ enum TaskType {
   rekenen, nederlands, geschiedenis, techniek, aardrijkskunde
 }
 
-enum TaskStatus {
-  newtask, scheduled, busy, done, 
+enum TaskStatusType {
+  newtask, scheduled, busy, done, finished,
+}
+
+enum AppStatusType {
+  waiting, busy, none,
 }
 
 enum DragType {

@@ -52,7 +52,7 @@ class _HomePageState extends State<_HomePage> {
   void _onTaskReady(TasksReadyEvent event) {
     setState(() {
       _tasks = _appData.tasks;
-      _tasks.forEach((t) => print(t.timeSpend));
+      // _tasks.forEach((t) => print(t.timeSpend));
     });
   }
 

@@ -29,9 +29,18 @@ class Background {
             ],
           ),
         ),
-        AppData().isBusy ? BusyWidget.loadBusyWidget() : Container()
+        _getInfoWidget(),
       ],
     );
+  }
+
+  static Widget _getInfoWidget() {
+    if (AppData().isBusy) {
+      return BusyWidget.loadBusyWidget();
+    } else if (AppData().isWaiting) {
+      return AskProgressWidget();
+    }
+    return Container();
   }
 
   static Widget _topRow(List<Task> tasks) {
@@ -164,6 +173,7 @@ class Background {
         return true;
       },
       onAccept: (data) {
+        print("todo 2");
         DragData _dragData = data as DragData;
         AppEvents.fireScheduleTasks(_dragData.taskId, date);
         // accepted = true;

@@ -5,6 +5,7 @@ import '../model/task.dart';
 import '../data/app_data.dart';
 import '../events/app_events.dart';
 import '../widget/background.dart';
+// import '../widget/busy_widget.dart';
 // import '../util/app_utils.dart';
 
 class StartPage extends StatelessWidget {
@@ -45,13 +46,16 @@ class _HomePageState extends State<_HomePage> {
     _appData = AppData();
     AppEvents.onTaskReady(_onTaskReady);
     AppEvents.fireGetTasks();
+    // BusyWidget.init();
   }
 
   void _onTaskReady(TasksReadyEvent event) {
     setState(() {
       _tasks = _appData.tasks;
+      _tasks.forEach((t) => print(t.timeSpend));
     });
   }
+
 
   @override
   void initState() {

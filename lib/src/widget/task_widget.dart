@@ -58,31 +58,27 @@ class TaskWidget {
   }
 
   static Widget buildScheduledTaskWidget(Task task, DateTime date) {
-    bool accepted = true;
-    bool startTask = !AppData().isBusy;
-
     return DragTarget(
       builder: (context, List<DragData> candidateData, rejectedData) {
-        return accepted ? _buildSchedTaskDragTarget(task, date) : Container();
+        return _theSchedTaskWidget(task, date);
       },
       onWillAccept: (data) {
-        return AppUtils.isToday(date);
+        return AppUtils.isToday(date) && !AppData().isBusy;
       },
       onAccept: (data) {
-        accepted = true;
-        AppEvents.fireStartStopTask(task.id, startTask);
+        AppEvents.fireStartTask(task.id);
       },
     );
   }
 
-  static Widget _buildSchedTaskDragTarget(Task task, DateTime date) {
-    bool isDueDate = AppUtils.isDueDate(task, date);
+  static Widget _theSchedTaskWidget(Task task, DateTime date) {
+    // bool isDueDate = AppUtils.isDueDate(task, date);
 
     return Container(
         child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          _schedTask(task, date),
+          _schedTaskImage(task, date),
           WidgetUtils.divLine(3),
           _todoTime(task, date),
         ],
@@ -90,9 +86,26 @@ class TaskWidget {
     );
   }
 
-  static Widget _schedTask(Task task, DateTime date) {
+  static Widget _schedTaskImage(Task task, DateTime date) {
     double w = AppUtils.dayPct(task, date) * Constants.taskWidth();
-    String imgname = AppUtils.imageName(task, date);
+    String imgname = AppUtils.schedImageName(task, date);
+
+    return Container(
+      width: w,
+      height: w,
+      decoration: new BoxDecoration(
+        border: Border.all(color: Colors.black, width: 2),
+        image: DecorationImage(
+          image: new AssetImage('images/' + imgname),
+          fit: BoxFit.fill,
+        ),
+      ),
+    );
+  }
+
+static Widget taskImage(Task task) {
+    double w = Constants.taskWidth();
+    String imgname = AppUtils.imageName(task);
 
     return Container(
       width: w,
@@ -108,36 +121,39 @@ class TaskWidget {
   }
 
   static Widget _todoTime(Task task, DateTime date) {
-    double w1 = AppUtils.calcEffort(task, date);
-    double w2 = AppUtils.calcEffDone(task, date);
-    double w3 = w1 - w2;
-    print("$w1  $w2  $w3");
+    double totalWidth = AppUtils.calcEffort(task, date);
+    double doneWidth = AppUtils.calcEffDone(task, date);
+    double todoWidth = totalWidth - doneWidth;
+    doneWidth -= 4;
+    todoWidth -= 4; 
+    if (doneWidth < 2.0) doneWidth = 1.0;
+    if (todoWidth < 2.0) todoWidth = 1.0;
+    
+    // print("$w1  $w2  $w3");
 
     return Container(
         height: 8,
-        width: w1,
+        width: totalWidth,
         decoration: new BoxDecoration(
-          border: Border.all(color: Colors.green, width: 1),
+          border: Border.all(color: Colors.black, width: 1),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              height: 3,
-              width: w2 - 2,
+              height: 5,
+              width: todoWidth,
+              decoration: BoxDecoration(
+                color: Colors.green,
+              ),
+            ),
+            Container(
+              height: 4,
+              width: doneWidth,
               decoration: BoxDecoration(
                 color: Colors.white,
               ),
-            ),
-            w3 >= 1.0 ? Container(
-              height: 3,
-              width: w3 - 2,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-            ) : 
-            Container()
-          ],
+            ),           ],
         ));
   }
 

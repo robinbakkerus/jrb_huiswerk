@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import '../data/constants.dart';
-// import '../events/app_events.dart';
+import '../events/app_events.dart';
 
 class TimerService {
   Stopwatch _watch;
@@ -21,11 +21,15 @@ class TimerService {
   void _onTick(Timer timer) {
     _currentDuration = _watch.elapsed;
     _elapsedTime += 1;
+    if (_timer != null) {
+      AppEvents.fireTick(_elapsedTime);
+    }
   }
 
   void start() {
     if (_timer != null) return;
 
+    _elapsedTime = 0;
     _timer = Timer.periodic(Constants.useDuration, _onTick);
     _watch.start();
   }

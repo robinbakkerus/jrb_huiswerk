@@ -46,13 +46,19 @@ class AppUtils {
 
   static bool _isNewTask(Task task, int yearDay) => task.status == TaskStatus.newtask;
 
+  static bool _isBusyTask(Task task, int yearDay) => task.status == TaskStatus.busy;
+
   static bool _isScheduledTask(Task task, int yearDay) {
     return (task.status == TaskStatus.scheduled || task.status == TaskStatus.busy) 
       && yearDay <= AppUtils.yearDayFromTask(task); 
   }
 
   static Task getTask(List<Task> tasks, int taskId) {
-    return tasks.firstWhere((t) => t.id == taskId);
+    if (taskId > 0) {
+      return tasks.firstWhere((t) => t.id == taskId);
+    } else {
+      return getBusyTask();
+    }
   }
 
   static void updateTask(List<Task> tasks, Task task) {
@@ -71,7 +77,7 @@ class AppUtils {
   }
   
   static String dayHdr(DateTime date) {
-    return Constants.dayHeaders[date.weekday];
+    return Constants.dayHeaders[date.weekday] + "\n" + date.weekday.toString() +  " " + Constants.maand[date.month];
   }
 
   static int maxExpEffort() {
@@ -86,20 +92,38 @@ class AppUtils {
   }
 
   static double calcEffDone(Task task, DateTime date) {
-    double r = calcEffort (task, date);
+    double eff = calcEffort (task, date);
     if (task.expEffort == 0) {
-      return r;
+      return eff;
     }
     
-    num pct = (task.expEffort - task.timeSpend) / task.expEffort;
-    return r * pct;
+    if ((task.timeSpend + 1) < task.expEffort) {
+      num pct = (task.expEffort - task.timeSpend) / task.expEffort;
+      return eff * pct;
+    } else {
+      return eff;
+    }
   }
 
-  static String imageName(Task task, DateTime date) {
-    String r = Constants.taskImageMap[task.type];
+  static String schedImageName(Task task, DateTime date) {
+    String r = imageName(task);
     if (task.status == TaskStatus.busy && isToday(date)) {
       r = 'huiswerk.jpg';
     }
     return r;
+  }
+
+  static String imageName(Task task) => Constants.taskImageMap[task.type];
+
+  static Task getBusyTask() {
+    List<Task> r = _findTasks(AppData().tasks, _isBusyTask, -1);
+    if (r.length == 1) {
+      return r[0];
+    } else if (r.length == 0) {
+      return null;
+    } else {
+      print("Meer dan 1 busy tasks !!!");
+      return null;
+    }
   }
 }

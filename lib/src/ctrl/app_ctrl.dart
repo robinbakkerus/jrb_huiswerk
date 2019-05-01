@@ -9,7 +9,7 @@ class AppController {
   factory AppController() => _instance;
 
   AppData _appData;
-  
+
   AppController.internal() {
     _appData = AppData();
     AppEvents.onScheduleTask(_onScheduleTask);
@@ -26,19 +26,24 @@ class AppController {
 
   void _onTaskStopOrStarted(StartStopTaskEvent event) {
     Task task = AppUtils.getTask(_appData.tasks, event.taskId);
-    if (event.start) {
-      _onStartActions(task);
+    if (task != null) {
+      if (event.start) {
+        _onStartActions(task);
+      } else {
+        _onStopActions(task);
+      }
+      AppUtils.updateTask(_appData.tasks, task);
+      print("todo "  + task.timeSpend.toString());
+      _appData.tasks.forEach((t) => print(t.id.toString() + " = " + t.timeSpend.toString()));
+      AppEvents.fireTasksReady();
     } else {
-      _onStopActions(task);
+      print('task is null??');
     }
-
-    AppUtils.updateTask(_appData.tasks, task);
-    AppEvents.fireTasksReady();
   }
 
   void _onStartActions(Task task) {
     task.status = TaskStatus.busy;
-    AppData().setStatus(TaskStatus.busy); 
+    AppData().setStatus(TaskStatus.busy);
     AppData().timerService.start();
   }
 
@@ -48,5 +53,4 @@ class AppController {
     AppData().timerService.stop();
     task.timeSpend += AppData().timerService.elapsedTime;
   }
-
 }

@@ -8,30 +8,36 @@ import '../util/app_utils.dart';
 import '../events/app_events.dart';
 import '../model/drag_data.dart';
 import 'widget_utils.dart';
+import 'busy_widget.dart';
 
 class Background {
   static Widget backWidgets(List<Task> tasks) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
-      width: AppData().screenWidth - 10,
-      height: AppData().screenHeight - 10,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _topRow(tasks),
-          Divider(
-            height: 2,
+    return Stack(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
+          width: AppData().screenWidth - 10,
+          height: AppData().screenHeight - 10,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              _topRow(tasks),
+              Divider(
+                height: 2,
+              ),
+              _scheduledTasks(tasks),
+            ],
           ),
-          _scheduledTasks(tasks),
-        ],
-      ),
+        ),
+        AppData().isBusy ? BusyWidget.loadBusyWidget() : Container()
+      ],
     );
   }
 
   static Widget _topRow(List<Task> tasks) {
     return Container(
       decoration: new BoxDecoration(border: new Border.all(color: Colors.blue)),
-      width: AppData().screenWidth * 0.9,
+      width: AppData().screenWidth * 1.5,
       height: Constants.taskHeight(),
       child: Row(
         children: <Widget>[
@@ -57,7 +63,10 @@ class Background {
         image: DecorationImage(
           image: new AssetImage('images/' + image),
           fit: BoxFit.fill,
-          colorFilter: active ? null : new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
+          colorFilter: active
+              ? null
+              : new ColorFilter.mode(
+                  Colors.black.withOpacity(0.2), BlendMode.dstATop),
         ),
       ),
     );
@@ -76,13 +85,13 @@ class Background {
 
   static Widget _dragableStartStopWatchStop() {
     return AppData().isBusy
-     ? Draggable(
-      data: DragData(DragType.stop, -1),
-      child: _stopWatch('stopwatch_stop.png', true),
-      feedback: _stopWatch('stopwatch_stop.png', true),
-      childWhenDragging: Text("..."),
-    )
-    : _stopWatch('stopwatch_stop.png', false);
+        ? Draggable(
+            data: DragData(DragType.stop, -1),
+            child: _stopWatch('stopwatch_stop.png', true),
+            feedback: _stopWatch('stopwatch_stop.png', true),
+            childWhenDragging: Text("..."),
+          )
+        : _stopWatch('stopwatch_stop.png', false);
   }
 
   static Widget _scheduledTasks(List<Task> tasks) {
@@ -145,7 +154,10 @@ class Background {
           decoration: BoxDecoration(
               color: Colors.yellow,
               border: new Border.all(color: Colors.brown, width: 2)),
-          child: Text(hdr),
+          child: Text(hdr, 
+           textAlign: TextAlign.justify,
+          // style: TextStyle(fontSize: 10),
+          maxLines: 2,),
         );
       },
       onWillAccept: (data) {

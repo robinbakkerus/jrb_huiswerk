@@ -19,6 +19,11 @@ class StartStopTaskEvent {
   StartStopTaskEvent(this.taskId, this.start);
 }
 
+class TimeTickEvent {
+  int elapsed;
+  TimeTickEvent(this.elapsed);
+}
+
 class AppEvents {
   static final EventBus _sEventBus = new EventBus();
 
@@ -31,7 +36,9 @@ class AppEvents {
   static void fireTasksReady() => _sEventBus.fire(new TasksReadyEvent());
   static void fireGetTasks() => _sEventBus.fire(new GetTasksEvent());
   static void fireScheduleTasks(int taskId, DateTime dueDate) => _sEventBus.fire(new ScheduleTaskEvent(taskId, dueDate));
-  static void fireStartStopTask(int taskId, bool start) => _sEventBus.fire(new StartStopTaskEvent(taskId, start));
+  static void fireStartTask(int taskId) => _sEventBus.fire(new StartStopTaskEvent(taskId, true));
+  static void fireStopTask() => _sEventBus.fire(new StartStopTaskEvent(-1, false));
+  static void fireTick(int elapsed) => _sEventBus.fire(new TimeTickEvent(elapsed));
 
   static void onTaskReady(OnTaskReadyFunc func) =>
       _sEventBus.on<TasksReadyEvent>().listen((event) => func(event));
@@ -41,9 +48,12 @@ class AppEvents {
       _sEventBus.on<ScheduleTaskEvent>().listen((event) => func(event));
   static void onStartStopTask(OnStartStopTaskFunc func) =>
       _sEventBus.on<StartStopTaskEvent>().listen((event) => func(event));
+  static void onTick(OnHandleTickFunc func) =>
+      _sEventBus.on<TimeTickEvent>().listen((event) => func(event));
 }
 
 typedef void OnTaskReadyFunc(TasksReadyEvent event);
 typedef void OnGetTasksFunc(GetTasksEvent event);
 typedef void OnScheduledTaskFunc(ScheduleTaskEvent event);
 typedef void OnStartStopTaskFunc(StartStopTaskEvent event);
+typedef void OnHandleTickFunc(TimeTickEvent event);

@@ -11,7 +11,17 @@ class Constants {
   static var taskImageMap = {
     TaskType.geschiedenis : 'geschiedenis.png',
     TaskType.nederlands : 'taal.png',
-    TaskType.rekenen : 'rekenen.png'
+    TaskType.rekenen : 'rekenen.png',
+    TaskType.aardrijkskunde : 'aardrijkskunde.png',
+    TaskType.techniek : 'techniek.png',
+  };
+
+  static var taskInfoMap = {
+    TaskType.geschiedenis : 'Geschiedenis',
+    TaskType.nederlands : 'Nederlands',
+    TaskType.rekenen : 'Rekenen',
+    TaskType.aardrijkskunde : 'Aardrijkskunde',
+    TaskType.techniek : 'Techniek',
   };
 
   static var dayHeaders = {
@@ -23,10 +33,12 @@ class Constants {
     6 : "Zat",
     7 : "Zon"
   };
+
+  static var maand = ["Jan", "Feb", "Maart", "April", "Mei", "Juni", "Juli", "Aug", "Sep", "Okt", "Nov", "Dec"];
 }
 
 enum TaskType {
-  rekenen, nederlands, geschiedenis
+  rekenen, nederlands, geschiedenis, techniek, aardrijkskunde
 }
 
 enum TaskStatus {

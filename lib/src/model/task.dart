@@ -32,4 +32,13 @@ class Task {
     map["timeSpend"] = this.timeSpend;
     return map;
   }
+
+  String infoMsg() {
+    StringBuffer sb = StringBuffer();
+    sb.write(Constants.taskInfoMap[this.type] + '\n');
+    sb.write('Geschat hiervoor : ' + this.expEffort.toString() + '\n');
+    sb.write('Gedaan tot nu  : ' + this.timeSpend.toString() + '\n');
+    sb.write ('Te doen vandaag :' + '10');
+    return sb.toString();
+  }
 }

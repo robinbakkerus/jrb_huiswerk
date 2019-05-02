@@ -67,7 +67,7 @@ class TaskWidget {
       },
       onAccept: (data) {
         print('todo accepted');
-        AppEvents.fireStartTask(task.id);
+        AppEvents.fireStartTask(task);
       },
     );
   }

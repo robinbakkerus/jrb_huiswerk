@@ -36,9 +36,9 @@ class Background {
 
   static Widget _getInfoWidget() {
     if (AppData().isBusy) {
-      return BusyWidget.loadBusyWidget();
+      return BusyTaskWidget();
     } else if (AppData().isWaiting) {
-      return AskProgressWidget();
+      return BusyTaskWidget();
     }
     return Container();
   }

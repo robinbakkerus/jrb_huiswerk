@@ -46,7 +46,7 @@ class AppUtils {
 
   static bool _isNewTask(Task task, int yearDay) => task.status == TaskStatusType.newtask;
 
-  static bool _isBusyTask(Task task, int yearDay) => task.status == TaskStatusType.busy;
+  static bool _isBusyTask(Task task, int yearDay) => task.status == TaskStatusType.busy ;
 
   static bool _isScheduledTask(Task task, int yearDay) {
     return (task.status == TaskStatusType.scheduled || task.status == TaskStatusType.busy) 
@@ -70,7 +70,7 @@ class AppUtils {
 
   static List<DateTime> calDays() {
     List<DateTime> r = List();
-    for (int i=0; i<7; i++) {
+    for (int i=0; i<Constants.showNDays; i++) {
       r.add(DateTime.now().add(Duration(days: i)));
     }
     return r;

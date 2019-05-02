@@ -6,7 +6,7 @@ class TaskServiceMockImpl implements ITaskService {
 
   @override
   Future<List<Task>> getUserTasks(int userId) async {
-    DateTime _dueDate = DateTime.now().add(Duration(days:4));
+    DateTime _dueDate = DateTime.now().add(Duration(days:5));
     Task _schedTask = Task(index++, index++, TaskType.rekenen, TaskStatusType.scheduled, _dueDate, 90, 0);
     List<Task> _tasks = [_newTask(TaskType.geschiedenis, 120),
       _newTask(TaskType.techniek, 120),

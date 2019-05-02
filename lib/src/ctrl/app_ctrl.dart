@@ -13,7 +13,9 @@ class AppController {
   AppController.internal() {
     _appData = AppData();
     AppEvents.onScheduleTask(_onScheduleTask);
-    AppEvents.onStartStopTask(_onTaskStopOrStarted);
+    AppEvents.onStartTask(_onTaskStarted);
+    AppEvents.onAskTaskProgress(_onAskTaskProgress);
+    AppEvents.onStopTask(_onTaskStopped);
   }
 
   void _onScheduleTask(ScheduleTaskEvent event) {
@@ -24,38 +26,51 @@ class AppController {
     AppEvents.fireTasksReady();
   }
 
-  void _onTaskStopOrStarted(StartStopTaskEvent event) {
-    Task task = AppUtils.getTask(_appData.tasks, event.taskId);
-    if (task != null) {
-      _doStopOrStartTask(event, task);
-    } else {
-      print('task is null??');
-      AppData().setStatus(AppStatusType.none);
-      AppData().timerService.stop();
+  void _onTaskStarted(StartTaskEvent event) {
+    print('_onTaskStarted');
+    if (event.task != null) {
+      event.task.status = TaskStatusType.busy;
+      AppData().setStatus(AppStatusType.busy);
+      AppData().timerService.start();
+      AppUtils.updateTask(_appData.tasks, event.task);
       AppEvents.fireTasksReady();
-    }
-  }
-
-  void _doStopOrStartTask(StartStopTaskEvent event, Task task) {
-     if (event.start) {
-      _onStartActions(task);
     } else {
-      _onStopActions(task);
+      _handleNullTask();
     }
-    AppUtils.updateTask(_appData.tasks, task);
-    AppEvents.fireTasksReady();
   }
 
-  void _onStartActions(Task task) {
-    task.status = TaskStatusType.busy;
-    AppData().setStatus(AppStatusType.busy);
-    AppData().timerService.start();
+  void _onTaskStopped(StopTaskEvent event) {
+    print('_onTaskStopped');
+    Task _task = AppUtils.getBusyTask();
+    if (_task != null) {
+      AppData().setStatus(AppStatusType.none);
+      //AppData().timerService.stop();
+      _task.status = TaskStatusType.scheduled;
+      AppUtils.updateTask(_appData.tasks, _task);
+      AppEvents.fireTasksReady();
+    } else {
+      _handleNullTask();
+    }
   }
 
-  void _onStopActions(Task task) {
-    task.status = TaskStatusType.scheduled;
-    AppData().setStatus(AppStatusType.waiting);
+  void _onAskTaskProgress(AskTaskProgressEvent event) {
+    print('_onAskTaskProgress');
+    Task _task = AppUtils.getBusyTask();
+    if (_task != null) {
+      AppData().setStatus(AppStatusType.waiting);
+      AppData().timerService.stop();
+      _task.timeSpend += AppData().timerService.elapsedTime;
+      // AppUtils.updateTask(_appData.tasks, _task);
+      //  AppEvents.fireTasksReady();
+    } else {
+      _handleNullTask();
+    }
+  }
+
+  void _handleNullTask() {
+    print('task is null??');
+    AppData().setStatus(AppStatusType.none);
     AppData().timerService.stop();
-    task.timeSpend += AppData().timerService.elapsedTime;
+    AppEvents.fireTasksReady();
   }
 }

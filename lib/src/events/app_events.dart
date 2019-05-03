@@ -24,7 +24,8 @@ class StartTaskEvent extends BaseTaskEvent {
   StartTaskEvent(task) : super(task);
 }
 
-class StopTaskEvent {
+class StopTaskEvent extends BaseTaskEvent {
+  StopTaskEvent(task) : super(task);
 }
 
 class AskTaskProgressEvent {
@@ -48,7 +49,7 @@ class AppEvents {
   static void fireGetTasks() => _sEventBus.fire(new GetTasksEvent());
   static void fireScheduleTasks(int taskId, DateTime dueDate) => _sEventBus.fire(new ScheduleTaskEvent(taskId, dueDate));
   static void fireStartTask(Task task) => _sEventBus.fire(new StartTaskEvent(task));
-  static void fireStopTask() => _sEventBus.fire(new StopTaskEvent());
+  static void fireStopTask(Task task) => _sEventBus.fire(new StopTaskEvent(task));
   static void fireAskTaskProgress() => _sEventBus.fire(new AskTaskProgressEvent());
   static void fireTick(int elapsed) => _sEventBus.fire(new TimeTickEvent(elapsed));
 

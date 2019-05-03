@@ -46,9 +46,10 @@ class Background {
   static Widget _topRow(List<Task> tasks) {
     return Container(
       decoration: new BoxDecoration(border: new Border.all(color: Colors.blue)),
-      width: AppData().screenWidth * 1.5,
+      width: 50 + (AppData().tasks.length + 2) * Constants.taskWidth() ,
       height: Constants.taskHeight(),
-      child: Row(
+      child: ListView(
+        scrollDirection: Axis.horizontal,
         children: <Widget>[
           _newTasks(tasks),
           WidgetUtils.divSpace(5),
@@ -104,7 +105,7 @@ class Background {
   }
 
   static Widget _scheduledTasks(List<Task> tasks) {
-    List<DateTime> caldays = AppUtils.calDays();
+    List<DateTime> caldays = AppUtils.calendarDays();
     return Container(
       height: WidgetUtils.dayHeight(),
       width: WidgetUtils.tasksWidth(),
@@ -158,7 +159,7 @@ class Background {
     return DragTarget(
       builder: (context, List<DragData> candidateData, rejectedData) {
         return Container(
-          height: Constants.taskHeight(),
+          height: 40, //Constants.taskHeight(),
           width: Constants.taskWidth(),
           decoration: BoxDecoration(
               color: Colors.yellow,

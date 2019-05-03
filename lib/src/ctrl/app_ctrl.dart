@@ -35,21 +35,23 @@ class AppController {
       AppUtils.updateTask(_appData.tasks, event.task);
       AppEvents.fireTasksReady();
     } else {
-      _handleNullTask();
+      _handleNullTask('start');
     }
   }
 
   void _onTaskStopped(StopTaskEvent event) {
     print('_onTaskStopped');
-    Task _task = AppUtils.getBusyTask();
+    Task _task = event.task;
     if (_task != null) {
       AppData().setStatus(AppStatusType.none);
       //AppData().timerService.stop();
-      _task.status = TaskStatusType.scheduled;
+      if (_task.status != TaskStatusType.finished) {
+        _task.status = TaskStatusType.scheduled;
+      }
       AppUtils.updateTask(_appData.tasks, _task);
       AppEvents.fireTasksReady();
     } else {
-      _handleNullTask();
+      _handleNullTask('stop');
     }
   }
 
@@ -63,12 +65,12 @@ class AppController {
       // AppUtils.updateTask(_appData.tasks, _task);
       //  AppEvents.fireTasksReady();
     } else {
-      _handleNullTask();
+      _handleNullTask("ask");
     }
   }
 
-  void _handleNullTask() {
-    print('task is null??');
+  void _handleNullTask(String msg) {
+    print('task is null?? ' + msg);
     AppData().setStatus(AppStatusType.none);
     AppData().timerService.stop();
     AppEvents.fireTasksReady();

@@ -1,5 +1,6 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 import '../data/constants.dart';
 import '../model/task.dart';
@@ -21,14 +22,14 @@ class _BusyTaskWidgetState extends State<BusyTaskWidget>
   Task _task = AppUtils.getBusyTask();
   Animation<double> _animation;
   AnimationController _animCtrl;
-  double _sliderValue = 0.0;
+  double _sliderValue;
 
   @override
   void initState() {
     super.initState();
     _animCtrl =
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
-    _animation = Tween<double>(begin: 0, end: 210).animate(_animCtrl)
+    _animation = Tween<double>(begin: 0, end: 240).animate(_animCtrl)
       ..addListener(() {
         setState(() {});
       });
@@ -90,17 +91,26 @@ class _BusyTaskWidgetState extends State<BusyTaskWidget>
 
   List<Widget> _askForProgressWidgets() {
     return [
-      _taskInfo(_task),
+      // _taskInfo(_task),
+      // WidgetUtils.divLine(10),
+      Text(
+        'Hoe lang heb je nog nodig ?\n 0 is klaar!',
+        textAlign: TextAlign.left,
+        // style: TextStyle(fontSize: 10),
+        maxLines: 3,
+      ),
       WidgetUtils.divLine(10),
-      Text('Hoe lang heb je nog nodig'),
       _theSlider(),
+      _theSlid2erFooter(),
+      WidgetUtils.divLine(10),
       RaisedButton(
         child: const Text('Sluit'),
         color: Theme.of(context).accentColor,
         elevation: 4.0,
         splashColor: Colors.blueGrey,
         onPressed: () {
-          AppEvents.fireStopTask();
+          _task.expEffort = _sliderValue.floor();
+          AppEvents.fireStopTask(_task);
         },
       ),
     ];
@@ -116,7 +126,7 @@ class _BusyTaskWidgetState extends State<BusyTaskWidget>
         Text(
           task.infoMsg(),
           textAlign: TextAlign.justify,
-          style: TextStyle(fontSize: 10),
+          style: TextStyle(fontSize: 12),
           maxLines: 4,
         ),
       ],
@@ -127,21 +137,48 @@ class _BusyTaskWidgetState extends State<BusyTaskWidget>
     return Row(
       children: <Widget>[
         WidgetUtils.huiswerkImage(),
-        WidgetUtils.divSpace(10),
+        WidgetUtils.divSpace(5),
         DigitalClock(),
+        WidgetUtils.divSpace(5),
+        Text('van ' + _task.todoPerDay().toString()),
+      ],
+    );
+  }
+
+  Widget _theSlid2erFooter() {
+    return Row(
+      children: <Widget>[
+        WidgetUtils.divSpace(10),
+        Text('0'),
+        WidgetUtils.divSpace(50),
+        Text(_sliderValue.ceil().toString()),
+        WidgetUtils.divSpace(50),
+        Text((_task.expEffort * 2.0).ceil().toString()),
       ],
     );
   }
 
   Widget _theSlider() {
-    return Slider(
-      activeColor: Colors.indigoAccent,
-      min: 0.0,
-      max: _task.expEffort.ceilToDouble(),
-      onChanged: (newRating) {
-        setState(() => _sliderValue = newRating);
-      },
-      value: _sliderValue,
+    int expeff = _task.expEffort;
+    int spend = _task.timeSpend;
+    int todo = max(0, expeff - spend);
+    print("todo = $todo");
+    if (_sliderValue == null) _sliderValue = todo.ceilToDouble();
+
+    return Row(
+      children: <Widget>[
+        Slider(
+          value: _sliderValue,
+          // label: todo.toString(),
+          activeColor: Colors.indigoAccent,
+          min: 0.0,
+          max: _task.expEffort.ceilToDouble() * 2.0,
+          onChanged: (newRating) {
+            setState(() => _sliderValue = newRating);
+            print(newRating);
+          },
+        ),
+      ],
     );
   }
 }

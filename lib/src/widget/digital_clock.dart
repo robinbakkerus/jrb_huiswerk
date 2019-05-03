@@ -26,7 +26,7 @@ class _DigitalClockState extends State<DigitalClock> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 40,
+        width: 50,
         height: 20,
         child: Row(
           children: <Widget>[

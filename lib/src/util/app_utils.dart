@@ -25,12 +25,13 @@ class AppUtils {
   
   // sorteer eerst op duur en dan op type
   static void sortTasks(List<Task> tasks) {
-    tasks.sort((a, b) => b.dueDate.compareTo(a.dueDate));
+    tasks.sort((t1, t2) => t2.expEffort.compareTo(t1.expEffort));
   }
 
   static bool isDueDate(Task task, DateTime date) => yearDayFromTask(task) == yearDayFromDate(date);
   static bool isToday(DateTime date) => yearDayFromDate(date) == yearDayFromNow();
-
+  static bool isAfterDueDate(Task task, DateTime date) => yearDayFromDate(date) > yearDayFromTask(task);
+  
   static int daysLeft(Task task, DateTime date) {
     int d1 = yearDayFromTask(task);
     int d2 = yearDayFromDate(date);
@@ -49,8 +50,10 @@ class AppUtils {
   static bool _isBusyTask(Task task, int yearDay) => task.status == TaskStatusType.busy ;
 
   static bool _isScheduledTask(Task task, int yearDay) {
-    return (task.status == TaskStatusType.scheduled || task.status == TaskStatusType.busy) 
-      && yearDay <= AppUtils.yearDayFromTask(task); 
+    return (task.status == TaskStatusType.scheduled 
+      || task.status == TaskStatusType.busy 
+      || task.status == TaskStatusType.finished);
+      // && yearDay <= AppUtils.yearDayFromTask(task); 
   }
 
   static Task getTask(List<Task> tasks, int taskId) {
@@ -68,7 +71,7 @@ class AppUtils {
     }
   }
 
-  static List<DateTime> calDays() {
+  static List<DateTime> calendarDays() {
     List<DateTime> r = List();
     for (int i=0; i<Constants.showNDays; i++) {
       r.add(DateTime.now().add(Duration(days: i)));

@@ -63,7 +63,7 @@ class TaskWidget {
         return _theSchedTaskWidget(task, date);
       },
       onWillAccept: (data) {
-        return AppUtils.isToday(date) && !AppData().isBusy;
+        return !AppData().isBusy && task.status == TaskStatusType.scheduled;
       },
       onAccept: (data) {
         print('todo accepted');
@@ -73,10 +73,33 @@ class TaskWidget {
   }
 
   static Widget _theSchedTaskWidget(Task task, DateTime date) {
-    // bool isDueDate = AppUtils.isDueDate(task, date);
+    //kijk van rechts naar links wat  voor task we moeten plaatsen
+    if (AppUtils.isAfterDueDate(task, date)) {
+      return Container();
+    } else if (AppUtils.isDueDate(task, date)) {
+      if (task.isDone) {
+        return _finishedTaskWidget(task, date);
+      } else {
+        return _wipTaskWidget(task, date);
+      }
+    } else {
+      if (task.isDone) {
+        return Container();
+      } else {
+        return _wipTaskWidget(task, date);
+      }
+    }
+  }
 
+  static Widget _finishedTaskWidget(Task task, DateTime date) {
+    return Stack(
+      children: <Widget>[_schedTaskImage(task, date), _isDoneImage()],
+    );
+  }
+
+  static Widget _wipTaskWidget(Task task, DateTime date) {
     return Container(
-        child: Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           _schedTaskImage(task, date),
@@ -104,7 +127,24 @@ class TaskWidget {
     );
   }
 
-static Widget taskImage(Task task) {
+  static Widget _isDoneImage() {
+    double w = Constants.taskWidth();
+
+    return Container(
+      width: w - 15,
+      height: w - 15,
+      decoration: new BoxDecoration(
+        image: DecorationImage(
+          image: new AssetImage('images/done.png'),
+          fit: BoxFit.fill,
+          colorFilter: new ColorFilter.mode(
+              Colors.black.withOpacity(0.7), BlendMode.dstATop),
+        ),
+      ),
+    );
+  }
+
+  static Widget taskImage(Task task) {
     double w = Constants.taskWidth();
     String imgname = AppUtils.imageName(task);
 
@@ -126,10 +166,10 @@ static Widget taskImage(Task task) {
     double doneWidth = AppUtils.calcEffDone(task, date);
     double todoWidth = totalWidth - doneWidth;
     doneWidth -= 4;
-    todoWidth -= 4; 
+    todoWidth -= 4;
     if (doneWidth < 2.0) doneWidth = 1.0;
     if (todoWidth < 2.0) todoWidth = 1.0;
-    
+
     // print("$w1  $w2  $w3");
 
     return Container(
@@ -154,8 +194,8 @@ static Widget taskImage(Task task) {
               decoration: BoxDecoration(
                 color: Colors.white,
               ),
-            ),           ],
+            ),
+          ],
         ));
   }
-
 }

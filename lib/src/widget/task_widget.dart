@@ -29,7 +29,7 @@ class TaskWidget {
       data: DragData(DragType.newTask, task.id),
       child: _newTaskWidget(taskType),
       feedback: _newTaskWidget(taskType),
-      childWhenDragging: Text(taskType.toString()),
+      childWhenDragging: Text(Constants.taskInfoMap[taskType]),
     );
   }
 

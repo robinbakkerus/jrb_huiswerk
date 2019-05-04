@@ -17,6 +17,7 @@ class AppData {
   BuildContext _context;
   AppStatus _appStatus = AppStatus();
   TimerService _timerService = new TimerService();
+  bool showedInitHelp = false;
 
   List<Task> get tasks => this._tasks;
   List<Task> get allScheduledTasks => AppUtils.allScheduledTasks(tasks);
@@ -28,11 +29,11 @@ class AppData {
     _context = ctx;
   }
 
-  double  screenWidth, screenHeight;
+  double screenWidth, screenHeight;
   bool get isBusy => _appStatus.currentStatus == AppStatusType.busy;
   bool get isWaiting => _appStatus.currentStatus == AppStatusType.waiting;
   void setStatus(AppStatusType status) => _appStatus.currentStatus = status;
-  
+
   AppData._internal() {
     AppEvents.onGetTasks(_onGetTasks);
     // AppEvents.onScheduleTask(_onScheduleTask);
@@ -61,5 +62,4 @@ class AppData {
       AppEvents.fireTasksReady();
     }
   }
- 
 }

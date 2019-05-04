@@ -8,7 +8,7 @@ class Constants {
   static bool devMode = true;
   static Duration useDuration = devMode ? Duration(seconds: 1) : Duration(minutes: 1);
   static int showNDays = 10;
-  
+ 
   static var taskImageMap = {
     TaskType.geschiedenis : 'geschiedenis.png',
     TaskType.nederlands : 'taal.png',

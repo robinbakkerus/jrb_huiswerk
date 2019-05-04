@@ -1,3 +1,4 @@
+import 'dart:math';
 import '../data/constants.dart';
 import '../util/app_utils.dart';
 
@@ -49,8 +50,8 @@ class Task {
   }
 
   int todoPerDay() {
-    double d = (this._expEffort - this.timeSpend) /
-        AppUtils.daysLeft(this, DateTime.now());
+    int daysleft = max(1, AppUtils.daysLeft(this, DateTime.now()));
+    double d = (this._expEffort - this.timeSpend) / daysleft;
     return d.ceil();
   }
 

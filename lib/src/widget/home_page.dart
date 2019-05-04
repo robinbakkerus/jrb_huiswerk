@@ -5,13 +5,13 @@ import '../model/task.dart';
 import '../data/app_data.dart';
 import '../events/app_events.dart';
 import '../widget/background.dart';
-// import '../widget/busy_widget.dart';
+import '../widget/show_info.dart';
 // import '../util/app_utils.dart';
 
 class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-      return new MaterialApp(
+    return new MaterialApp(
       title: 'Huiswerk APP',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
@@ -46,21 +46,22 @@ class _HomePageState extends State<_HomePage> {
     _appData = AppData();
     AppEvents.onTaskReady(_onTaskReady);
     AppEvents.fireGetTasks();
-    // BusyWidget.init();
   }
 
   void _onTaskReady(TasksReadyEvent event) {
     setState(() {
       _tasks = _appData.tasks;
-      // _tasks.forEach((t) => print(t.timeSpend));
     });
-  }
 
+    if (!AppData().showedInitHelp) {
+      InfoWidgetBuilder.showInfoMessage(context);
+      AppData().showedInitHelp = true;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // _image = 'images/' + "huiswerk" + ".jpg";
   }
 
   @override
@@ -72,7 +73,7 @@ class _HomePageState extends State<_HomePage> {
       // body: Stack(children: <Widget>[
       //   Background.backWidgets(_tasks),
       // ]),
-      body : _tasks != null ? Background.backWidgets(_tasks) : null,
+      body: _tasks != null ? Background.backWidgets(_tasks) : null,
       floatingActionButton: FloatingActionButton(
         onPressed: _refresh,
         child: Icon(Icons.refresh),
@@ -81,7 +82,7 @@ class _HomePageState extends State<_HomePage> {
   }
 
   void _refresh() {
-   setState(() {
+    setState(() {
       _tasks = List();
     });
     AppEvents.fireGetTasks();

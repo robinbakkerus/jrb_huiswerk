@@ -11,6 +11,7 @@ import 'widget_utils.dart';
 import 'busy_widget.dart';
 
 class Background {
+
   static Widget backWidgets(List<Task> tasks) {
     return Stack(
       children: <Widget>[

@@ -20,10 +20,14 @@ class AppController {
 
   void _onScheduleTask(ScheduleTaskEvent event) {
     Task task = AppUtils.getTask(_appData.tasks, event.taskId);
+    if (task != null) {
     task.status = TaskStatusType.scheduled;
     task.dueDate = event.dueDate;
     AppUtils.updateTask(_appData.tasks, task);
     AppEvents.fireTasksReady();
+    } else {
+      _handleNullTask('sched');
+    }
   }
 
   void _onTaskStarted(StartTaskEvent event) {

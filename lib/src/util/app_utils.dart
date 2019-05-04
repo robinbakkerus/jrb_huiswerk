@@ -100,7 +100,7 @@ class AppUtils {
       return eff;
     }
     
-    if ((task.timeSpend + 1) < task.expEffort) {
+    if ((task.timeSpend + 1) < task.expEffort && task.expEffort > 0)  {
       num pct = (task.expEffort - task.timeSpend) / task.expEffort;
       return eff * pct;
     } else {

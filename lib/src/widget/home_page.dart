@@ -66,7 +66,7 @@ class _HomePageState extends State<_HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    AppData().context = context;
+    AppData().setContext(context);
 
     return new Scaffold(
       // appBar: buildMainAppBar(context, -1),

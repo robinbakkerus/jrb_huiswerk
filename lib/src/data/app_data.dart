@@ -25,7 +25,7 @@ class AppData {
   AppStatus get appStatus => _appStatus;
 
   BuildContext get context => _context;
-  set context(BuildContext ctx) {
+  void setContext(BuildContext ctx) {
     _context = ctx;
   }
 
